@@ -1,0 +1,8 @@
+root = true
+
+# C# files
+[*.cs]
+generated_code = true
+
+# IDE005: Remove unnecessary using directives
+dotnet_diagnostic.IDE0005.severity = none
