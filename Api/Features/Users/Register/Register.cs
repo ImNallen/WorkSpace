@@ -13,8 +13,6 @@ namespace Api.Features.Users.Register;
 
 public record Request(string Email, string Password, Guid RoleId);
 
-public record Response(UserDto User);
-
 public record Command(string Email, string Password, Guid RoleId) : ICommand<UserDto>;
 
 public class Endpoint : IEndpoint
