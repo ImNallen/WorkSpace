@@ -20,11 +20,6 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 
         _ = builder.HasMany(r => r.Users).WithOne(u => u.Role).HasForeignKey(u => u.RoleId);
 
-        _ = builder
-            .HasMany(r => r.RolePermissions)
-            .WithOne(rp => rp.Role)
-            .HasForeignKey(rp => rp.RoleId);
-
-        _ = builder.HasData(Role.Admin, Role.User);
+        _ = builder.HasMany(r => r.Permissions).WithMany(p => p.Roles);
     }
 }

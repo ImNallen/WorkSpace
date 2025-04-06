@@ -86,16 +86,9 @@ public class Handler(
             return Result.Failure<UserDto>(Errors.EmailNotUnique);
         }
 
-        // Check if the role exists
-        bool hasUsers = await unitOfWork.Users.AnyAsync(cancellationToken);
-
-        Role? role = !hasUsers
-            ? await unitOfWork
-                .Roles.Where(x => x.Id == Role.Admin.Id)
-                .FirstOrDefaultAsync(cancellationToken)
-            : await unitOfWork
-                .Roles.Where(x => x.Id == request.RoleId)
-                .FirstOrDefaultAsync(cancellationToken);
+        Role? role = await unitOfWork
+            .Roles.Where(x => x.Id == request.RoleId)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (role is null)
         {

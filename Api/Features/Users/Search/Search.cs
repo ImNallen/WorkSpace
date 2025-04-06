@@ -44,7 +44,7 @@ public class Endpoint : IEndpoint
                 }
             )
             .WithTags(Tags.Users)
-            .RequireAuthorization(Requires.Read);
+            .RequireAuthorization(Requires.UsersRead);
     }
 }
 

@@ -24,8 +24,7 @@ public class PermissionAuthorizationHandler(IUnitOfWork unitOfWork)
         User? user = await unitOfWork
             .Users.Where(x => x.Id == userId)
             .Include(x => x.Role)
-            .ThenInclude(x => x.RolePermissions)
-            .ThenInclude(x => x.Permission)
+            .ThenInclude(x => x.Permissions)
             .AsSplitQuery()
             .FirstOrDefaultAsync();
 
@@ -34,7 +33,7 @@ public class PermissionAuthorizationHandler(IUnitOfWork unitOfWork)
             return;
         }
 
-        var userPermissions = user.Role.RolePermissions.Select(x => x.Permission.Name.Value).ToHashSet();
+        var userPermissions = user.Role.Permissions.Select(x => x.Name.Value).ToHashSet();
 
         if (userPermissions.Contains(requirement.Permission))
         {

@@ -18,8 +18,6 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
             .HasMaxLength(Name.MaxLength)
             .IsRequired();
 
-        _ = builder.HasMany(p => p.RolePermissions).WithOne().HasForeignKey(rp => rp.PermissionId);
-
-        _ = builder.HasData(Permission.Read, Permission.Write, Permission.Delete, Permission.Admin);
+        _ = builder.HasMany(p => p.Roles).WithMany(r => r.Permissions);
     }
 }

@@ -55,7 +55,7 @@ public class WorkSpaceDbContext(DbContextOptions<WorkSpaceDbContext> options)
                 Id = d.Id,
                 Type = d.GetType().Name,
                 Content = JsonConvert.SerializeObject(d, SerializerSettings.Instance),
-                OccurredOnUtc = d.OccurredOnUtc
+                OccurredOnUtc = d.OccurredOnUtc,
             })
             .ToList();
 

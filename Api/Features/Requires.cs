@@ -2,11 +2,17 @@ namespace Api.Features;
 
 internal static class Requires
 {
-    public const string Read = "read";
+    // Users
+    public const string UsersRead = "users:read";
 
-    public const string Write = "write";
+    public const string UsersWrite = "users:write";
 
-    public const string Delete = "delete";
+    public const string UsersDelete = "users:delete";
 
-    public const string Admin = "admin";
+    // Roles
+    public const string RolesRead = "roles:read";
+
+    public const string RolesWrite = "roles:write";
+
+    public const string RolesDelete = "roles:delete";
 }

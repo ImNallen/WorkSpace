@@ -25,7 +25,7 @@ public class Endpoint : IEndpoint
                 }
             )
             .WithTags(Tags.Users)
-            .RequireAuthorization(Requires.Delete);
+            .RequireAuthorization(Requires.UsersDelete);
     }
 }
 
