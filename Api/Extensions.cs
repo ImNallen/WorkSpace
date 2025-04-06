@@ -51,6 +51,7 @@ internal static class Extensions
             Permission.Create(Name.Create("roles:read").Value).Value,
             Permission.Create(Name.Create("roles:write").Value).Value,
             Permission.Create(Name.Create("roles:delete").Value).Value,
+            Permission.Create(Name.Create("permissions:read").Value).Value,
         ];
 
         await dbContext.Permissions.AddRangeAsync(permissions);

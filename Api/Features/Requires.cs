@@ -15,4 +15,7 @@ internal static class Requires
     public const string RolesWrite = "roles:write";
 
     public const string RolesDelete = "roles:delete";
+
+    // Permissions
+    public const string PermissionsRead = "permissions:read";
 }
