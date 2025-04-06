@@ -41,8 +41,13 @@ public class Endpoint : IEndpoint
 
                     Result<UserDto> result = await sender.Send(command);
 
-                    // TODO: When we have a Get by id endpoint, we can return Results.CreatedAtRoute(); instead of just Created();
-                    return result.IsFailure ? CustomResults.Problem(result) : Results.Created();
+                    return result.IsFailure
+                        ? CustomResults.Problem(result)
+                        : Results.CreatedAtRoute(
+                            "GetUserById",
+                            new { id = result.Value.Id },
+                            result.Value
+                        );
                 }
             )
             .WithTags(Tags.Users)

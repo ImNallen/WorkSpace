@@ -28,6 +28,7 @@ public class Endpoint : IEndpoint
                 }
             )
             .WithTags(Tags.Users)
+            .WithName("GetUserById")
             .RequireAuthorization(Requires.UsersRead);
     }
 }
