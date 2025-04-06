@@ -1,5 +1,6 @@
 using Api.Features.Abstractions;
 using Api.Features.Roles.Entities;
+using Api.Features.Shared;
 using Api.Features.Users.Entities;
 using Api.Persistence;
 using Api.Services.Encryption;
@@ -11,9 +12,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.Features.Users.Register;
 
-public record Request(string Email, string Password, Guid RoleId);
+public record Request(
+    string Email,
+    string Password,
+    Guid RoleId,
+    string FirstName,
+    string LastName
+);
 
-public record Command(string Email, string Password, Guid RoleId) : ICommand<UserDto>;
+public record Command(string Email, string Password, Guid RoleId, string FirstName, string LastName)
+    : ICommand<UserDto>;
 
 public class Endpoint : IEndpoint
 {
@@ -23,7 +31,13 @@ public class Endpoint : IEndpoint
                 "/users",
                 async (Request request, ISender sender) =>
                 {
-                    var command = new Command(request.Email, request.Password, request.RoleId);
+                    var command = new Command(
+                        request.Email,
+                        request.Password,
+                        request.RoleId,
+                        request.FirstName,
+                        request.LastName
+                    );
 
                     Result<UserDto> result = await sender.Send(command);
 
@@ -43,6 +57,14 @@ public class Validator : AbstractValidator<Command>
         RuleFor(c => c.Email).NotEmpty().EmailAddress();
         RuleFor(c => c.Password).NotEmpty().MinimumLength(8);
         RuleFor(c => c.RoleId).NotEmpty();
+        RuleFor(c => c.FirstName)
+            .NotEmpty()
+            .MinimumLength(Name.MinLength)
+            .MaximumLength(Name.MaxLength);
+        RuleFor(c => c.LastName)
+            .NotEmpty()
+            .MinimumLength(Name.MinLength)
+            .MaximumLength(Name.MaxLength);
     }
 }
 
@@ -97,10 +119,26 @@ public class Handler(
             return Result.Failure<UserDto>(passwordResult.Error);
         }
 
+        Result<Name> firstNameResult = Name.Create(request.FirstName);
+
+        if (firstNameResult.IsFailure)
+        {
+            return Result.Failure<UserDto>(firstNameResult.Error);
+        }
+
+        Result<Name> lastNameResult = Name.Create(request.LastName);
+
+        if (lastNameResult.IsFailure)
+        {
+            return Result.Failure<UserDto>(lastNameResult.Error);
+        }
+
         var user = User.Create(
             emailResult.Value,
             passwordResult.Value,
             role.Id,
+            firstNameResult.Value,
+            lastNameResult.Value,
             dateTimeProvider.UtcNow
         );
 
@@ -108,6 +146,13 @@ public class Handler(
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new UserDto(user.Id, user.Email.Value, user.RoleId);
+        return new UserDto(
+            user.Id,
+            user.Email.Value,
+            user.FirstName.Value,
+            user.LastName.Value,
+            user.Role.Name.Value,
+            user.CreatedOnUtc
+        );
     }
 }

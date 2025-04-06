@@ -10,6 +10,9 @@ public class UserMappings : IRegister
             .NewConfig<User, UserDto>()
             .Map(dest => dest.Id, src => src.Id)
             .Map(dest => dest.Email, src => src.Email.Value)
-            .Map(dest => dest.RoleId, src => src.RoleId);
+            .Map(dest => dest.FirstName, src => src.FirstName.Value)
+            .Map(dest => dest.LastName, src => src.LastName.Value)
+            .Map(dest => dest.Role, src => src.Role.Name.Value)
+            .Map(dest => dest.CreatedOnUtc, src => src.CreatedOnUtc);
     }
 }

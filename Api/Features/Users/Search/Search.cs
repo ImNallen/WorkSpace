@@ -62,6 +62,9 @@ public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<Query, Result<Pag
             query = query.Where(x =>
                 x.Id.ToString().Contains(request.SearchTerm)
                 || ((string)x.Email).Contains(request.SearchTerm)
+                || ((string)x.FirstName).Contains(request.SearchTerm)
+                || ((string)x.LastName).Contains(request.SearchTerm)
+                || ((string)x.Role.Name).Contains(request.SearchTerm)
             );
         }
 
@@ -70,7 +73,11 @@ public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<Query, Result<Pag
         ) switch
         {
             "email" => c => c.Email,
-            _ => c => c.Id,
+            "firstname" => c => c.FirstName,
+            "lastname" => c => c.LastName,
+            "role" => c => c.Role.Name,
+            "createdonutc" => c => c.CreatedOnUtc,
+            _ => c => c.CreatedOnUtc,
         };
 
         query =
@@ -83,6 +90,7 @@ public class Handler(IUnitOfWork unitOfWork) : IRequestHandler<Query, Result<Pag
         List<UserDto> users = await query
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
+            .Include(x => x.Role)
             .ProjectToType<UserDto>(TypeAdapterConfig.GlobalSettings)
             .ToListAsync(cancellationToken);
 

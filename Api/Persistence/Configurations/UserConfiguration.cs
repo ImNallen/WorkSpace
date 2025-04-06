@@ -1,4 +1,5 @@
-﻿using Api.Features.Users.Entities;
+﻿using Api.Features.Shared;
+using Api.Features.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +23,20 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion(p => p.Value, v => Password.Create(v).Value)
             .HasColumnName(nameof(Password))
             .HasMaxLength(Password.MaxLength)
+            .IsRequired();
+
+        _ = builder
+            .Property(u => u.FirstName)
+            .HasConversion(n => n.Value, v => Name.Create(v).Value)
+            .HasColumnName(nameof(User.FirstName))
+            .HasMaxLength(Name.MaxLength)
+            .IsRequired();
+
+        _ = builder
+            .Property(u => u.LastName)
+            .HasConversion(n => n.Value, v => Name.Create(v).Value)
+            .HasColumnName(nameof(User.LastName))
+            .HasMaxLength(Name.MaxLength)
             .IsRequired();
 
         _ = builder.HasIndex(u => u.Email).IsUnique();

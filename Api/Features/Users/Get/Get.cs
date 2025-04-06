@@ -38,6 +38,7 @@ public class Handler(IUnitOfWork unitOfWork) : IQueryHandler<Query, UserDto>
     {
         UserDto? user = await unitOfWork
             .Users.Where(x => x.Id == request.Id)
+            .Include(x => x.Role)
             .ProjectToType<UserDto>(TypeAdapterConfig.GlobalSettings)
             .FirstOrDefaultAsync(cancellationToken);
 
