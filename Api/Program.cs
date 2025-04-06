@@ -20,6 +20,7 @@ app.MapEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.ApplyMigrations();
+    await app.SeedData();
     app.MapOpenApi();
 }
 
