@@ -7,9 +7,15 @@ namespace Api.Features.Roles.Entities;
 
 public class Role : Entity
 {
-    public static readonly Role User = new(Guid.Parse("01960513-664b-7304-92de-d2544cfa1ff7"), Name.Create("User").Value);
+    public static readonly Role User = new(
+        Guid.Parse("01960513-664b-7304-92de-d2544cfa1ff7"),
+        Name.Create("User").Value
+    );
 
-    public static readonly Role Admin = new(Guid.Parse("01960514-3085-7e45-a2ce-dc3336bdbac3"), Name.Create("Admin").Value);
+    public static readonly Role Admin = new(
+        Guid.Parse("01960514-3085-7e45-a2ce-dc3336bdbac3"),
+        Name.Create("Admin").Value
+    );
 
     private Role(Guid id, Name name)
         : base(id)
