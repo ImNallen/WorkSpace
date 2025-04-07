@@ -15,13 +15,15 @@ public static class ClaimsPrincipalExtensions
 
     public static string GetIdentityId(this ClaimsPrincipal? principal)
     {
-        return principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new InvalidOperationException("User identity is unavailable");
+        return principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+            ?? throw new InvalidOperationException("User identity is unavailable");
     }
 
     public static HashSet<string> GetPermissions(this ClaimsPrincipal? principal)
     {
         IEnumerable<Claim> permissionClaims =
-            principal?.FindAll(CustomClaims.Permission) ?? throw new InvalidOperationException("Permissions are unavailable");
+            principal?.FindAll(CustomClaims.Permission)
+            ?? throw new InvalidOperationException("Permissions are unavailable");
 
         return [.. permissionClaims.Select(c => c.Value)];
     }

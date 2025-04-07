@@ -20,7 +20,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
         return new Token
         {
             AccessToken = accessToken,
-            ExpiresAt = dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes)
+            ExpiresAt = dateTimeProvider.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
         };
     }
 
@@ -35,7 +35,7 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtOptions, IDateTimeProvid
         [
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email.Value),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         ];
 
         var securityToken = new JwtSecurityToken(
