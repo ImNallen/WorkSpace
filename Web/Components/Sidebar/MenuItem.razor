@@ -1,0 +1,43 @@
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<button @onclick="@(() => NavigateToPage(Name.ToLower()))"
+    class="flex mx-4 items-center gap-1 rounded-lg hover:bg-light-background-tertiary dark:hover:bg-dark-background-tertiary hover:cursor-pointer relative @(CurrentUri?.EndsWith(Name.ToLower()) ?? false ? "before:absolute before:left-[-16px] before:top-[12.5%] before:h-[75%] before:w-0.5 before:bg-white/70" : "")">
+    <div class="flex items-center py-1 px-2 gap-2">
+        <i class="ph @Icon text-2xl"></i>
+        <p class="text-sm">@Name</p>
+    </div>
+</button>
+
+@code {
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+
+    private string? CurrentUri { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CurrentUri = Navigation.Uri;
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        CurrentUri = e.Location;
+        StateHasChanged();
+    }
+
+    private void NavigateToPage(string path)
+    {
+        CurrentUri = path;
+        Navigation.NavigateTo(path);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}
