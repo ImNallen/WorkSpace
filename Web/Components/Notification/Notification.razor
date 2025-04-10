@@ -1,0 +1,84 @@
+﻿@using System.Timers
+@using Web.Services
+
+@implements IDisposable
+
+@if (IsVisible)
+{
+    <button @onclick="() => Hide()" class="fixed top-5 right-5 p-4 rounded-md z-50 @_notificationTypeClass transition-opacity duration-300 ease-in-out @(IsVisible ? "opacity-100" : "opacity-0")">
+        <div class="flex justify-between items-center gap-8">
+            <div class="flex items-center gap-4">
+                <i class="@_notificationIcon text-2xl"></i>
+                <p class="text-xs">@Message</p>
+            </div>
+        </div>
+    </button>
+}
+
+@code {
+    private bool IsVisible { get; set; }
+    private string Message { get; set; } = string.Empty;
+    private string _notificationTypeClass = "bg-light-background dark:bg-dark-background";
+    private string _notificationIcon = "ph ph-[info]";
+    private Timer? _timer;
+
+    [Inject]
+    private NotificationService NotificationService { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        NotificationService.OnShow += ShowNotification;
+    }
+
+    private Task ShowNotification(string message, NotificationType type)
+    {
+        return Show(message, type);
+    }
+
+    public void Dispose()
+    {
+        NotificationService.OnShow -= ShowNotification;
+        _timer?.Dispose();
+    }
+
+    public async Task Show(string message, NotificationType notificationType, int duration = 10000)
+    {
+        Message = message;
+        await SetNotificationStyle(notificationType);
+        IsVisible = true;
+        StateHasChanged();
+
+        _timer = new Timer(duration);
+        _timer.Elapsed += (sender, e) => Hide();
+        _timer.AutoReset = false;
+        _timer.Start();
+    }
+    
+    public enum NotificationType
+    {
+        Success,
+        Error,
+        Info
+    }
+
+    private void Hide()
+    {
+        IsVisible = false;
+        _timer?.Stop();
+        _timer?.Dispose();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private Task SetNotificationStyle(NotificationType notificationType)
+    {
+        (_notificationTypeClass, _notificationIcon) = notificationType switch
+        {
+            NotificationType.Success => ("bg-green-600", "ph ph-[check]"),
+            NotificationType.Error => ("bg-red-400", "ph ph-[warning]"),
+            NotificationType.Info => ("bg-blue-600", "ph ph-[info]"),
+            _ => ("bg-light-background-primary dark:bg-dark-background", "ph ph-[info]")
+        };
+
+        return Task.CompletedTask;
+    }
+}

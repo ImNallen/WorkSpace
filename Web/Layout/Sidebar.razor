@@ -1,12 +1,11 @@
 @using Web.Components.Sidebar
 @inject NavigationManager Navigation
-@implements IDisposable
 
 <div class="flex h-full flex-col">
     <div
         class="h-18 flex items-center justify-left border-b border-light-background-tertiary dark:border-dark-background-tertiary">
         <div class="w-full mx-4">
-            <button @onclick="@(() => NavigateToPage("/"))"
+            <button @onclick="@(() => Navigation.NavigateTo("/"))"
                 class="flex w-full items-center justify-between gap-1 rounded-lg hover:bg-light-background-tertiary dark:hover:bg-dark-background-tertiary hover:cursor-pointer">
                 <div class="flex items-center py-1 px-2 gap-2">
                     <i class="ph ph-[planet] text-2xl"></i>
@@ -47,30 +46,3 @@
         </div>
     </div>
 </div>
-
-@code {
-    private string? CurrentUri { get; set; }
-
-    protected override void OnInitialized()
-    {
-        CurrentUri = Navigation.Uri;
-        Navigation.LocationChanged += OnLocationChanged;
-    }
-
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        CurrentUri = e.Location;
-        StateHasChanged();
-    }
-
-    private void NavigateToPage(string path)
-    {
-        CurrentUri = path;
-        Navigation.NavigateTo(path);
-    }
-
-    public void Dispose()
-    {
-        Navigation.LocationChanged -= OnLocationChanged;
-    }
-}
