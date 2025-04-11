@@ -97,7 +97,7 @@ internal static class DependencyInjection
                     type is { IsAbstract: false, IsInterface: false }
                     && type.IsAssignableTo(typeof(IEndpoint))
                 )
-                .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type)),
+                .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))
         ];
 
         services.TryAddEnumerable(serviceDescriptors);
@@ -195,7 +195,7 @@ internal static class DependencyInjection
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
